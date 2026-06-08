@@ -1316,63 +1316,37 @@ footer {
   }
 
   function submitForm() {
-    var name  = document.getElementById('fname').value.trim();
-    var email = document.getElementById('femail').value.trim();
-    var phone = document.getElementById('fphone').value.trim();
-    var insta = document.getElementById('finsta').value.trim();
-    var niche = document.getElementById('fniche').value.trim();
-    var msg   = document.getElementById('fmsg').value.trim();
 
-    if (!name || !email) {
-      (!name
-        ? document.getElementById('fname')
-        : document.getElementById('femail')
-      ).focus();
-      return;
+  const nome = document.getElementById('fname').value;
+  const telefone = document.getElementById('fphone').value;
+  const email = document.getElementById('femail').value;
+  const instagram = document.getElementById('finsta').value;
+  const nicho = document.getElementById('fniche').value;
+  const mensagem = document.getElementById('fmsg').value;
+
+  emailjs.send(
+    "service_gf9pbkg",
+    "template_nlx4hhd",
+    {
+      nome: nome,
+      telefone: telefone,
+      email: email,
+      instagram: instagram,
+      nicho: nicho,
+      mensagem: mensagem
     }
+  )
+  .then(() => {
 
-    var btn = document.getElementById('submitBtn');
-    btn.textContent = 'Enviando...';
-    btn.disabled = true;
+      document.getElementById("formBody").style.display = "none";
+      document.getElementById("successScreen").style.display = "block";
 
-    var pkg = selectedPkg === 4
-      ? 'Essencial - 4 carrosséis/mês - R$ 390/mês'
-      : 'Profissional - 8 carrosséis/mês - R$ 690/mês';
-    var tipo = waitlistOn ? 'LISTA DE ESPERA' : 'NOVO CADASTRO';
-
-    var data = {
-      _subject: tipo + ' — ' + name,
-      _template: 'table',
-      _captcha: 'false',
-      Tipo: tipo,
-      Nome: name,
-      'E-mail': email,
-      WhatsApp: phone || '—',
-      'Instagram/Site': insta || '—',
-      Nicho: niche || '—',
-      Pacote: pkg,
-      'Sobre a marca': msg || '—',
-      '_replyto': email
-    };
-
-    fetch('https://formsubmit.co/ajax/theisysouza@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
-    })
-    .then(function(r) {
-      if (!r.ok) throw new Error('network');
-      return r.json();
-    })
-    .then(function(res) {
-      if (res && res.success === 'true' || res && res.success === true) {
-        mostrarSucesso();
-      } else {
-        mostrarSucesso(); // mostra sucesso mesmo assim
-      }
-    })
-    .catch(function() { mostrarSucesso(); });
-  }
+  })
+  .catch((error) => {
+      alert("Erro ao enviar formulário.");
+      console.error(error);
+  });
+}
 
   function mostrarSucesso() {
     document.getElementById('formBody').style.display = 'none';
@@ -1383,6 +1357,14 @@ footer {
         'Assim que uma vaga abrir, entrarei em contato com você em primeira mão. Fique de olho no <strong>WhatsApp</strong>.';
     }
   }
+</script>
+
+   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init({
+  publicKey: "2WgIVuTD_CEadSqfk"
+});
 </script>
 </body>
 </html>
